@@ -4,7 +4,12 @@
 
 # Tsinghua Climbing 2026
 
-**清华攀岩赛事 实时排名展示与管理系统**
+**清华大学 马约翰杯 攀岩比赛 · 实时排名展示与管理系统**
+
+> 本项目最初用于 **2025-2026 年度清华大学"马约翰杯"学生运动会攀岩比赛**
+> （简称"马杯攀岩"）的现场记分与观众席/直播屏幕展示。  
+> 若你需要用于其他年度或其他学校的赛事，参见文末
+> [如何迁移到 2027 / 其他赛事](#-如何迁移到-2027--其他赛事) 一节。
 
 轻量级 · 自部署 · 手机电脑自适应 · 四个赛道独立排名 · 甲乙组后台筛选 · 每 10 分钟自动备份
 
@@ -242,6 +247,122 @@ tsinghua-climbing-2026/
 |---|---|---|
 | `TSINGHUA_CLIMBING_HOST` | `0.0.0.0` | 监听地址 |
 | `TSINGHUA_CLIMBING_PORT` | `5000`    | 监听端口 |
+
+---
+
+## 🔄 如何迁移到 2027 / 其他赛事
+
+本项目最初用于 **2025-2026 年度清华大学"马约翰杯"攀岩比赛**。
+如果明年（2026-2027 年度）、或其他学校/其他赛事想直接复用，
+只需修改下面 3-5 个地方即可。
+
+### 1. 更换标题和年份（必改）
+
+所有显示给用户的"Tsinghua Climbing 2026"出现在以下位置：
+
+| 文件 | 需要修改的位置 |
+|---|---|
+| `templates/base.html` | `<title>`、顶栏 `brand-title` / `brand-sub`、页脚 `footer-title` |
+| `templates/viewer.html` | `<h1 class="hero-title">Tsinghua Climbing 2026</h1>` |
+| `templates/*.html` | 其他页面的 `{% block title %}` |
+| `README.md` | 项目标题和介绍段落 |
+
+快速替换命令（在项目根目录执行）：
+
+```powershell
+# Windows PowerShell
+Get-ChildItem -Recurse -Include *.html,*.md,*.py | ForEach-Object {
+    (Get-Content $_.FullName -Raw) -replace 'Tsinghua Climbing 2026','Tsinghua Climbing 2027' |
+        Set-Content $_.FullName -Encoding UTF8
+}
+```
+
+```bash
+# Linux / macOS
+grep -rl 'Tsinghua Climbing 2026' --include='*.html' --include='*.md' --include='*.py' . | \
+    xargs sed -i 's/Tsinghua Climbing 2026/Tsinghua Climbing 2027/g'
+```
+
+如果你愿意，可以在 `server.py` 顶部加一个常量把年份抽成变量，
+然后在模板里用 `{{ EVENT_TITLE }}` 之类引用，这样以后只改一处即可。
+
+### 2. 是否保留 / 更换校徽（必看）
+
+- 如果你仍然是 **清华大学校内赛事**，可以继续使用 `static/img/logo.png` 的清华校徽。
+- 如果是**其他学校 / 非清华赛事 / 任何商业场景**，
+  **请务必替换 `static/img/logo.png`** 为你自己单位的 logo，
+  以避免侵犯清华大学的商标权（详见 [`NOTICE.md`](./NOTICE.md)）。
+
+替换方式：直接覆盖 `static/img/logo.png`（建议 正方形、不小于 256×256、PNG 透明背景）。
+
+### 3. 清空上一届数据
+
+旧的一届比赛数据都在 `data/` 和 `backup/`。最干净的迁移方式是
+**把整个仓库 `git clone` 一份到新目录，作为 2027 届的运行时**：
+
+```bash
+# 假设你已把本项目推到自己的 github:
+git clone https://github.com/<you>/tsinghua-climbing-2026.git tsinghua-climbing-2027
+cd tsinghua-climbing-2027
+# 按上面 1/2 步修改标题和 logo
+# 首次启动时会自动初始化空数据库, 让你设置新的管理员账号
+./start.sh        # 或 start.bat
+```
+
+如果你就在原目录继续用，也可以直接删掉 `data/` 和 `backup/`
+（记得先把上一届 `climbing.db` 另外归档保存）：
+
+```bash
+# 停止服务后
+mv data  archive/2026-data
+mv backup archive/2026-backup
+mkdir data backup
+./start.sh
+```
+
+### 4. （可选）调整赛道名称
+
+如果明年比赛项目有增减（比如改成 "男子预赛 / 男子半决赛 / 男子决赛 / 女子..."
+共 6 个赛道），修改 `server.py` 顶部的 `TRACKS` 字典即可：
+
+```python
+TRACKS = {
+    "men_qual":   "男子预赛",
+    "men_semi":   "男子半决赛",   # ← 新增
+    "men_final":  "男子决赛",
+    "women_qual": "女子预赛",
+    "women_semi": "女子半决赛",   # ← 新增
+    "women_final":"女子决赛",
+}
+```
+
+数据库有 `UNIQUE(track, number)` 约束自动处理，不需要迁移脚本。
+已有 entries 表中 `track` 字段是自由字符串，保留/新增/重命名都可以。
+但若你**删除**一个旧 track 的枚举值而对应的旧数据还在表里，
+会导致这些数据不再显示（数据本身仍在 DB 中）；如要清理可
+`DELETE FROM entries WHERE track='men_qual_old';`。
+
+### 5. （可选）调整甲乙组命名
+
+如果比赛没有甲乙组区分，可以在管理页面全部录为"甲组"就好，
+观众页本来就不显示组别信息，不会有任何副作用。
+
+如果想把 A/B 改为 C/D 或其他标签，修改 `server.py` 的 `GROUPS` 字典：
+
+```python
+GROUPS = {
+    "A": "甲组",   # 改成你想要的显示名
+    "B": "乙组",
+}
+```
+
+**不要改 `A` / `B` 这两个键**，它们是存在数据库里的枚举值，
+直接改键名会和已有数据冲突。需要改键名时请用一次性 SQL 迁移：
+
+```sql
+UPDATE entries SET group_name = 'C' WHERE group_name = 'A';
+UPDATE entries SET group_name = 'D' WHERE group_name = 'B';
+```
 
 ---
 
