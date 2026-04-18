@@ -1,0 +1,560 @@
+/* =========================================================
+   Tsinghua Climbing 2026 · 样式
+   配色以清华校徽紫为主, 字体来自 DeathStrandingFonts
+   ========================================================= */
+
+@font-face {
+  font-family: "DS Mono";
+  src: url("../fonts/BO%20CD%20Mono%20Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DS Mono";
+  src: url("../fonts/BO%20CD%20Mono%20Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DS Display";
+  src: url("../fonts/EX%20PS%20Medium%20Neon.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DS Mils";
+  src: url("../fonts/EX%20Mils%20Med.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DS Mils";
+  src: url("../fonts/EX%20Mils%20Med%20Oblique.otf") format("opentype");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "AlibabaPuHuiTi";
+  src: url("../fonts/AlibabaPuHuiTi-3-55-Regular.woff2") format("woff2"),
+       url("../fonts/AlibabaPuHuiTi-3-55-Regular.woff")  format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+4E00-9FFF, U+3000-303F, U+FF00-FFEF, U+3400-4DBF,
+                 U+2000-206F, U+2E80-2EFF, U+3100-312F, U+31A0-31BF;
+}
+
+:root {
+  --purple-900: #3a0f48;
+  --purple-800: #4b1560;
+  --purple-700: #5b1a6a;   /* 校徽主紫 */
+  --purple-600: #7e2a9a;
+  --purple-500: #9b4fc3;
+  --purple-300: #d7b7e6;
+  --purple-100: #f4e9fa;
+  --ink-900:    #1b0f22;
+  --ink-700:    #40304c;
+  --ink-500:    #6b5a79;
+  --paper:      #fbf7fd;
+  --paper-2:    #f2e7f7;
+  --white:      #ffffff;
+  --danger:     #c0392b;
+  --ok:         #2e7d32;
+
+  --shadow: 0 4px 16px rgba(60, 15, 80, 0.12);
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background:
+    radial-gradient(1200px 600px at 20% -10%, rgba(155,79,195,0.18), transparent 60%),
+    radial-gradient(900px 500px at 110% 10%, rgba(91,26,106,0.18), transparent 60%),
+    var(--paper);
+  color: var(--ink-900);
+  font-family: "DS Mono", "AlibabaPuHuiTi", "Segoe UI", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a { color: var(--purple-700); text-decoration: none; }
+a:hover { color: var(--purple-600); }
+
+/* ------------------ Header ------------------ */
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px clamp(12px, 3vw, 32px);
+  background: linear-gradient(135deg, var(--purple-800), var(--purple-700) 60%, var(--purple-600));
+  color: var(--white);
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--white);
+}
+.brand-logo {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.25)) brightness(0) invert(1);
+}
+.brand-text { line-height: 1.1; }
+.brand-title {
+  font-family: "DS Display", "DS Mono", "AlibabaPuHuiTi", sans-serif;
+  font-size: clamp(18px, 2.4vw, 24px);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.brand-sub {
+  font-family: "DS Mils", "DS Mono", "AlibabaPuHuiTi", monospace;
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  opacity: 0.85;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.nav-link {
+  color: var(--white);
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  transition: background 0.2s, transform 0.2s;
+}
+.nav-link:hover { background: rgba(255,255,255,0.18); color: var(--white); }
+.nav-link.as-link {
+  cursor: pointer;
+  font: inherit;
+}
+.inline-form { display: inline; margin: 0; }
+
+/* ------------------ Main ------------------ */
+
+.site-main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: clamp(14px, 3vw, 28px);
+}
+
+.hero { text-align: center; padding: 22px 0 10px; }
+.hero-sm { padding: 14px 0 4px; }
+.hero-title {
+  font-family: "DS Display", "DS Mono", "AlibabaPuHuiTi", sans-serif;
+  font-size: clamp(28px, 5vw, 46px);
+  margin: 0 0 6px;
+  letter-spacing: 0.08em;
+  background: linear-gradient(90deg, var(--purple-800), var(--purple-500));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.hero-sub {
+  font-family: "DS Mils", "AlibabaPuHuiTi", monospace;
+  letter-spacing: 0.2em;
+  color: var(--ink-500);
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+/* ------------------ Flash ------------------ */
+
+.flashes { margin: 10px 0; display: grid; gap: 8px; }
+.flash {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-size: 14px;
+}
+.flash-ok    { background: #eaf6ec; border-color: #c3e6c8; color: var(--ok); }
+.flash-error { background: #fdecea; border-color: #f5c6c0; color: var(--danger); }
+
+/* ------------------ Tabs ------------------ */
+
+.track-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 2px 14px;
+  overflow-x: auto;
+  margin-top: 10px;
+}
+.track-tab {
+  flex: 0 0 auto;
+  border: 1px solid var(--purple-300);
+  background: var(--white);
+  color: var(--purple-700);
+  padding: 10px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+  letter-spacing: 0.04em;
+  transition: all 0.2s;
+  min-height: 40px;
+}
+.track-tab:hover { background: var(--purple-100); }
+.track-tab.active {
+  background: linear-gradient(135deg, var(--purple-700), var(--purple-600));
+  color: var(--white);
+  border-color: transparent;
+  box-shadow: var(--shadow);
+}
+
+.track-panel { display: none; }
+.track-panel.active { display: block; animation: fade 0.25s ease; }
+@keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+.panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 4px 4px 10px;
+}
+.panel-head h2 {
+  margin: 0;
+  font-family: "DS Display", "AlibabaPuHuiTi", sans-serif;
+  color: var(--purple-800);
+  letter-spacing: 0.06em;
+  font-size: clamp(18px, 2.5vw, 22px);
+}
+.panel-count {
+  font-family: "DS Mils", "AlibabaPuHuiTi", monospace;
+  font-size: 12px;
+  color: var(--ink-500);
+  letter-spacing: 0.2em;
+}
+
+/* ------------------ Ranking table ------------------ */
+
+.ranking-table-wrap {
+  overflow-x: auto;
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.ranking-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 560px;
+}
+.ranking-table th,
+.ranking-table td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--paper-2);
+  vertical-align: middle;
+}
+.ranking-table thead th {
+  background: var(--purple-100);
+  color: var(--purple-800);
+  font-family: "DS Mils", "AlibabaPuHuiTi", monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 12px;
+  border-bottom: 2px solid var(--purple-300);
+  position: sticky;
+  top: 0;
+}
+.ranking-table tbody tr:hover { background: var(--paper); }
+.ranking-table tbody tr:last-child td { border-bottom: none; }
+
+.mono { font-family: "DS Mono", ui-monospace, Menlo, Consolas, monospace; }
+
+.col-rank   { width: 72px; }
+.col-number { width: 90px; }
+.col-height { width: 90px; }
+.col-time   { width: 110px; }
+.col-ops    { width: 170px; text-align: center; }
+
+.rank-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-weight: 500;
+  font-family: "DS Display", "AlibabaPuHuiTi", sans-serif;
+  letter-spacing: 0.04em;
+  background: var(--paper-2);
+  color: var(--purple-800);
+}
+.rank-pill.rank-1 { background: linear-gradient(135deg, #f9d371, #e7a530); color: #4b2b04; box-shadow: 0 2px 8px rgba(231,165,48,0.35); }
+.rank-pill.rank-2 { background: linear-gradient(135deg, #e3e3e7, #b8b8c0); color: #2a2a32; box-shadow: 0 2px 8px rgba(150,150,160,0.35); }
+.rank-pill.rank-3 { background: linear-gradient(135deg, #edb78a, #c58048); color: #3a1e08; box-shadow: 0 2px 8px rgba(197,128,72,0.35); }
+
+.empty {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 30px;
+  text-align: center;
+  color: var(--ink-500);
+  border: 1px dashed var(--purple-300);
+}
+
+/* ------------------ Forms ------------------ */
+
+.entry-form {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  margin-bottom: 16px;
+  border-left: 4px solid var(--purple-600);
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px 14px;
+}
+.form-grid label,
+.auth-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--ink-700);
+  letter-spacing: 0.04em;
+}
+.form-grid input,
+.form-grid select,
+.auth-form input {
+  border: 1px solid var(--purple-300);
+  background: var(--white);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  font-family: "DS Mono", "AlibabaPuHuiTi", monospace;
+  color: var(--ink-900);
+  min-height: 40px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.form-grid input:focus,
+.form-grid select:focus,
+.auth-form input:focus {
+  outline: none;
+  border-color: var(--purple-600);
+  box-shadow: 0 0 0 3px rgba(155,79,195,0.22);
+}
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font: inherit;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  min-height: 40px;
+  transition: transform 0.08s, background 0.15s, box-shadow 0.15s;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary {
+  background: linear-gradient(135deg, var(--purple-700), var(--purple-600));
+  color: var(--white);
+  box-shadow: 0 2px 8px rgba(91,26,106,0.28);
+}
+.btn-primary:hover { box-shadow: 0 4px 14px rgba(91,26,106,0.35); }
+.btn-ghost {
+  background: var(--white);
+  color: var(--purple-700);
+  border-color: var(--purple-300);
+}
+.btn-ghost:hover { background: var(--purple-100); }
+.btn-danger {
+  background: var(--white);
+  color: var(--danger);
+  border-color: #f3b6b0;
+}
+.btn-danger:hover { background: #fdecea; }
+.btn-sm { padding: 6px 12px; min-height: 32px; font-size: 13px; }
+.btn-block { width: 100%; }
+
+/* flex 只作用于数据行的操作列, 不影响表头 th 的文字对齐 */
+.admin-table tbody td.col-ops {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.admin-table tbody td { vertical-align: middle; }
+/* 管理表多一列(组别), 增加最小宽度避免按钮被挤出表格 */
+.admin-table { min-width: 720px; }
+
+/* ------------------ Group filter / Group badge (仅管理页) ------------------ */
+
+.group-filter {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  padding: 10px 14px;
+  margin: 6px 0 2px;
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border-left: 4px solid var(--purple-600);
+}
+.group-filter-label {
+  font-size: 13px;
+  color: var(--ink-700);
+  letter-spacing: 0.04em;
+  margin-right: 2px;
+}
+.group-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--purple-300);
+  background: var(--white);
+  color: var(--purple-700);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  transition: all 0.15s;
+}
+.group-chip:hover { background: var(--purple-100); color: var(--purple-800); }
+.group-chip.active {
+  background: linear-gradient(135deg, var(--purple-700), var(--purple-600));
+  color: var(--white);
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(91,26,106,0.28);
+}
+.group-filter-hint {
+  flex: 1 1 100%;
+  color: var(--ink-500);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  margin-top: 2px;
+}
+
+.col-group { width: 76px; }
+.group-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  min-width: 44px;
+  border: 1px solid transparent;
+}
+.group-badge.group-A {
+  background: #f4e9fa;
+  color: var(--purple-800);
+  border-color: var(--purple-300);
+}
+.group-badge.group-B {
+  background: #fff4e6;
+  color: #8a4a00;
+  border-color: #f4c99a;
+}
+
+/* ------------------ Auth (login/setup/error) ------------------ */
+
+.auth-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 30px 0;
+}
+.auth-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px clamp(20px, 4vw, 34px);
+  width: min(100%, 420px);
+  border-top: 4px solid var(--purple-600);
+}
+.auth-title {
+  font-family: "DS Display", "AlibabaPuHuiTi", sans-serif;
+  color: var(--purple-800);
+  letter-spacing: 0.06em;
+  margin: 0 0 12px;
+  text-align: center;
+}
+.auth-hint {
+  color: var(--ink-500);
+  font-size: 13px;
+  margin: 10px 0 16px;
+  text-align: center;
+}
+.auth-form { display: grid; gap: 12px; }
+
+/* ------------------ Footer ------------------ */
+
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  color: var(--ink-500);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  padding: 24px 10px 30px;
+  font-family: "DS Mils", "AlibabaPuHuiTi", monospace;
+}
+.site-footer .footer-title { color: var(--purple-700); font-weight: 500; }
+.site-footer .footer-sep { color: var(--purple-300); }
+.site-footer .footer-credit b {
+  color: var(--purple-800);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+/* ------------------ Mobile tweaks ------------------ */
+
+@media (max-width: 640px) {
+  .site-header { padding: 10px 12px; }
+  .brand-logo { width: 36px; height: 36px; }
+  .nav-link { padding: 8px 10px; font-size: 13px; }
+  .ranking-table { min-width: 520px; }
+  .ranking-table th, .ranking-table td { padding: 10px 10px; }
+  .col-ops { width: auto; }
+  .admin-table tbody td.col-ops { justify-content: flex-start; }
+  .form-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 420px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .brand-sub { display: none; }
+}

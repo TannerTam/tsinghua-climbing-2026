@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <h1 class="hero-title">Tsinghua Climbing 2026</h1>
+  <p class="hero-sub">实时比赛排名 / Live Rankings</p>
+</section>
+
+<div class="track-tabs" role="tablist">
+  {% for key, label in TRACKS.items() %}
+    <button type="button" class="track-tab {% if loop.first %}active{% endif %}"
+            data-target="track-{{ key }}">{{ label }}</button>
+  {% endfor %}
+</div>
+
+{% for key, label in TRACKS.items() %}
+  <section class="track-panel {% if loop.first %}active{% endif %}" id="track-{{ key }}">
+    <div class="panel-head">
+      <h2>{{ label }}</h2>
+      <span class="panel-count">{{ data[key]|length }} 人</span>
+    </div>
+
+    {% if data[key] %}
+      <div class="ranking-table-wrap">
+        <table class="ranking-table">
+          <thead>
+            <tr>
+              <th class="col-rank">名次</th>
+              <th class="col-number">编号</th>
+              <th class="col-name">姓名</th>
+              <th class="col-height">高度</th>
+              <th class="col-time">时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in data[key] %}
+              <tr>
+                <td class="col-rank">
+                  <span class="rank-pill rank-{{ row.rank if row.rank <= 3 else 'n' }}">{{ row.rank }}</span>
+                </td>
+                <td class="col-number mono">{{ row.number }}</td>
+                <td class="col-name">{{ row.name }}</td>
+                <td class="col-height mono">{{ row.height }}</td>
+                <td class="col-time mono">{{ row.time }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="empty">暂无成绩</div>
+    {% endif %}
+  </section>
+{% endfor %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+  (function () {
+    const tabs = document.querySelectorAll('.track-tab');
+    const panels = document.querySelectorAll('.track-panel');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const id = tab.dataset.target;
+        tabs.forEach(t => t.classList.toggle('active', t === tab));
+        panels.forEach(p => p.classList.toggle('active', p.id === id));
+        history.replaceState(null, '', '#' + id);
+      });
+    });
+    // 支持从 URL hash 直接打开对应赛道
+    const hash = location.hash.replace('#', '');
+    if (hash) {
+      const tab = document.querySelector(`.track-tab[data-target="${hash}"]`);
+      if (tab) tab.click();
+    }
+    // 每 15 秒自动刷新数据
+    async function refresh() {
+      try {
+        const res = await fetch('/api/rankings', { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = await res.json();
+        for (const key in data) {
+          const panel = document.getElementById('track-' + key);
+          if (!panel) continue;
+          const tbody = panel.querySelector('tbody');
+          const count = panel.querySelector('.panel-count');
+          if (count) count.textContent = data[key].length + ' 人';
+          if (!data[key].length) {
+            panel.querySelector('.ranking-table-wrap, .empty')?.remove();
+            const empty = document.createElement('div');
+            empty.className = 'empty';
+            empty.textContent = '暂无成绩';
+            panel.appendChild(empty);
+            continue;
+          }
+          let wrap = panel.querySelector('.ranking-table-wrap');
+          if (!wrap) {
+            panel.querySelector('.empty')?.remove();
+            wrap = document.createElement('div');
+            wrap.className = 'ranking-table-wrap';
+            wrap.innerHTML = `<table class="ranking-table"><thead><tr>
+              <th class="col-rank">名次</th><th class="col-number">编号</th>
+              <th class="col-name">姓名</th><th class="col-height">高度</th>
+              <th class="col-time">时间</th></tr></thead><tbody></tbody></table>`;
+            panel.appendChild(wrap);
+          }
+          const tb = wrap.querySelector('tbody');
+          tb.innerHTML = data[key].map(r => `
+            <tr>
+              <td class="col-rank"><span class="rank-pill rank-${r.rank<=3?r.rank:'n'}">${r.rank}</span></td>
+              <td class="col-number mono">${escapeHtml(r.number)}</td>
+              <td class="col-name">${escapeHtml(r.name)}</td>
+              <td class="col-height mono">${escapeHtml(r.height)}</td>
+              <td class="col-time mono">${escapeHtml(r.time)}</td>
+            </tr>
+          `).join('');
+        }
+      } catch (e) { /* ignore */ }
+    }
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[c]));
+    }
+    setInterval(refresh, 15000);
+  })();
+</script>
+{% endblock %}

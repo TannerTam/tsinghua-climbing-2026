@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ code }} · Tsinghua Climbing 2026{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card" style="text-align:center">
+    <h1 class="auth-title">{{ code }}</h1>
+    <p class="auth-hint">{{ msg }}</p>
+    <a class="btn btn-primary btn-block" href="{{ url_for('index') }}">返回首页</a>
+  </div>
+</div>
+{% endblock %}

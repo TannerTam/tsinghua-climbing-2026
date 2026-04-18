@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block title %}管理 · Tsinghua Climbing 2026{% endblock %}
+{% block content %}
+<section class="hero hero-sm">
+  <h1 class="hero-title">管理员控制台</h1>
+  <p class="hero-sub">新增 / 编辑 / 删除选手成绩</p>
+</section>
+
+<div class="group-filter">
+  <span class="group-filter-label">排名筛选：</span>
+  <a href="{{ url_for('admin', group='all') }}"
+     class="group-chip {% if current_group == 'ALL' %}active{% endif %}">全部</a>
+  <a href="{{ url_for('admin', group='A') }}"
+     class="group-chip {% if current_group == 'A' %}active{% endif %}">仅甲组</a>
+  <a href="{{ url_for('admin', group='B') }}"
+     class="group-chip {% if current_group == 'B' %}active{% endif %}">仅乙组</a>
+  <span class="group-filter-hint">
+    {% if current_group == 'A' %}当前仅展示并按甲组内部排名{% elif current_group == 'B' %}当前仅展示并按乙组内部排名{% else %}当前展示所有选手, 甲乙组合并排名 (与观众页一致){% endif %}
+  </span>
+</div>
+
+<div class="track-tabs" role="tablist">
+  {% for key, label in TRACKS.items() %}
+    <button type="button" class="track-tab {% if loop.first %}active{% endif %}"
+            data-target="track-{{ key }}">{{ label }}</button>
+  {% endfor %}
+</div>
+
+{% for key, label in TRACKS.items() %}
+<section class="track-panel {% if loop.first %}active{% endif %}" id="track-{{ key }}">
+  <div class="panel-head">
+    <h2>{{ label }}</h2>
+    <span class="panel-count">{{ data[key]|length }} 人</span>
+  </div>
+
+  <form class="entry-form" method="post" action="{{ url_for('admin_entry_upsert') }}">
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <input type="hidden" name="track" value="{{ key }}">
+    <input type="hidden" name="id" value="">
+    <input type="hidden" name="_return_group" value="{{ current_group|lower }}">
+    <div class="form-grid">
+      <label>编号
+        <input name="number" required maxlength="16" placeholder="如 001" autocomplete="off">
+      </label>
+      <label>姓名
+        <input name="name" required maxlength="32" placeholder="张三" autocomplete="off">
+      </label>
+      <label>组别
+        <select name="group" required>
+          {% for g_key, g_label in GROUPS.items() %}
+            <option value="{{ g_key }}">{{ g_label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>高度
+        <input name="height" required placeholder="12 或 12+" autocomplete="off"
+               pattern="^\s*\d{1,3}\s*\+?\s*$">
+      </label>
+      <label>时间
+        <input name="time" required placeholder="秒或 mm:ss, 如 125.43 或 2:05.43"
+               autocomplete="off">
+      </label>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">保存</button>
+      <button type="reset" class="btn btn-ghost">重置</button>
+    </div>
+  </form>
+
+  {% if data[key] %}
+  <div class="ranking-table-wrap">
+    <table class="ranking-table admin-table">
+      <thead>
+        <tr>
+          <th class="col-rank">名次</th>
+          <th class="col-number">编号</th>
+          <th class="col-name">姓名</th>
+          <th class="col-group">组别</th>
+          <th class="col-height">高度</th>
+          <th class="col-time">时间</th>
+          <th class="col-ops">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in data[key] %}
+          <tr data-id="{{ row.id }}"
+              data-number="{{ row.number }}"
+              data-name="{{ row.name }}"
+              data-group="{{ row.group }}"
+              data-height="{{ row.height }}"
+              data-time="{{ row.time }}">
+            <td class="col-rank"><span class="rank-pill rank-{{ row.rank if row.rank <= 3 else 'n' }}">{{ row.rank }}</span></td>
+            <td class="col-number mono">{{ row.number }}</td>
+            <td class="col-name">{{ row.name }}</td>
+            <td class="col-group">
+              <span class="group-badge group-{{ row.group }}">{{ GROUPS.get(row.group, row.group) }}</span>
+            </td>
+            <td class="col-height mono">{{ row.height }}</td>
+            <td class="col-time mono">{{ row.time }}</td>
+            <td class="col-ops">
+              <button type="button" class="btn btn-sm btn-edit">编辑</button>
+              <form method="post" action="{{ url_for('admin_entry_delete') }}" class="inline-form"
+                    onsubmit="return confirm('确认删除该条成绩?');">
+                <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+                <input type="hidden" name="id" value="{{ row.id }}">
+                <input type="hidden" name="_return_group" value="{{ current_group|lower }}">
+                <button type="submit" class="btn btn-sm btn-danger">删除</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <div class="empty">
+      {% if current_group == 'A' %}甲组暂无成绩{% elif current_group == 'B' %}乙组暂无成绩{% else %}暂无成绩{% endif %}
+    </div>
+  {% endif %}
+</section>
+{% endfor %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+  (function () {
+    const tabs = document.querySelectorAll('.track-tab');
+    const panels = document.querySelectorAll('.track-panel');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const id = tab.dataset.target;
+        tabs.forEach(t => t.classList.toggle('active', t === tab));
+        panels.forEach(p => p.classList.toggle('active', p.id === id));
+        history.replaceState(null, '', '#' + id);
+      });
+    });
+    const hash = location.hash.replace('#', '');
+    if (hash) {
+      const tab = document.querySelector(`.track-tab[data-target="${hash}"]`);
+      if (tab) tab.click();
+    }
+
+    document.querySelectorAll('.btn-edit').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tr = btn.closest('tr');
+        const panel = btn.closest('.track-panel');
+        const form = panel.querySelector('.entry-form');
+        form.querySelector('input[name=id]').value = tr.dataset.id;
+        form.querySelector('input[name=number]').value = tr.dataset.number;
+        form.querySelector('input[name=name]').value = tr.dataset.name;
+        form.querySelector('select[name=group]').value = tr.dataset.group || 'A';
+        form.querySelector('input[name=height]').value = tr.dataset.height;
+        form.querySelector('input[name=time]').value = tr.dataset.time;
+        form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        form.querySelector('input[name=number]').focus();
+      });
+    });
+
+    document.querySelectorAll('.entry-form').forEach(form => {
+      form.addEventListener('reset', () => {
+        setTimeout(() => { form.querySelector('input[name=id]').value = ''; }, 0);
+      });
+    });
+  })();
+</script>
+{% endblock %}

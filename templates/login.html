@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}登录 · Tsinghua Climbing 2026{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card">
+    <h1 class="auth-title">管理员登录</h1>
+    {% if error %}<div class="flash flash-error">{{ error }}</div>{% endif %}
+    <form method="post" class="auth-form">
+      <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+      <label>
+        <span>用户名</span>
+        <input name="username" required autocomplete="username" maxlength="32">
+      </label>
+      <label>
+        <span>密码</span>
+        <input name="password" type="password" required autocomplete="current-password" maxlength="128">
+      </label>
+      <button type="submit" class="btn btn-primary btn-block">登录</button>
+    </form>
+    <p class="auth-hint">仅管理员可登录; 观众无需登录。</p>
+  </div>
+</div>
+{% endblock %}

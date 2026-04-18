@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#5b1a6a">
+  <title>{% block title %}Tsinghua Climbing 2026{% endblock %}</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/logo.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="{{ url_for('index') }}">
+      <img class="brand-logo" src="{{ url_for('static', filename='img/logo.png') }}" alt="Tsinghua">
+      <div class="brand-text">
+        <div class="brand-title">Tsinghua Climbing</div>
+        <div class="brand-sub">2026</div>
+      </div>
+    </a>
+    <nav class="site-nav">
+      <a href="{{ url_for('index') }}" class="nav-link">观众</a>
+      {% if is_admin %}
+        <a href="{{ url_for('admin') }}" class="nav-link">管理</a>
+        <form method="post" action="{{ url_for('admin_logout') }}" class="inline-form">
+          <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+          <button type="submit" class="nav-link as-link">退出</button>
+        </form>
+      {% else %}
+        <a href="{{ url_for('admin_login') }}" class="nav-link">登录</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <main class="site-main">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flashes">
+          {% for cat, msg in messages %}
+            <div class="flash flash-{{ cat }}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <span class="footer-title">Tsinghua Climbing 2026</span>
+    <span class="footer-sep">·</span>
+    <span class="footer-credit">Created by <b>Tanner</b></span>
+  </footer>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

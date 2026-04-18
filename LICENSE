@@ -1,0 +1,35 @@
+MIT License
+
+Copyright (c) 2026 Tanner
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+--------------------------------------------------------------------------
+注意 / Notice
+
+本 MIT License 仅覆盖本仓库中由作者编写的源代码(主要是 Python / HTML /
+CSS / JavaScript 文件)。仓库中附带的第三方资源 ──
+  static/img/logo.png          (清华大学校徽)
+  static/fonts/*DeathStranding* 风格字体 (Death Stranding 粉丝作品)
+  static/fonts/AlibabaPuHuiTi* (阿里巴巴普惠体 3.0)
+  ── 各自遵循其原始版权 / 授权条款, 详见 NOTICE.md。
+This MIT License only covers the source code authored by the project
+author. Third-party assets (the Tsinghua University logo, DeathStranding
+fan-made fonts, Alibaba PuHuiTi font) retain their original copyrights;
+please refer to NOTICE.md.

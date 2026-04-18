@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}初始化 · Tsinghua Climbing 2026{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card">
+    <h1 class="auth-title">初次使用 · 设置管理员</h1>
+    <p class="auth-hint">
+      系统首次启动, 请设置一个管理员账号。<br>
+      密码只会以哈希形式保存, 无法找回。
+    </p>
+    {% if error %}<div class="flash flash-error">{{ error }}</div>{% endif %}
+    <form method="post" class="auth-form">
+      <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+      <label>
+        <span>管理员用户名</span>
+        <input name="username" required autocomplete="username"
+               maxlength="32" pattern="[A-Za-z0-9_\-]{3,32}"
+               title="3-32 个字母/数字/下划线/短横线">
+      </label>
+      <label>
+        <span>密码 (至少 8 位)</span>
+        <input name="password" type="password" required autocomplete="new-password"
+               minlength="8" maxlength="128">
+      </label>
+      <label>
+        <span>再次输入密码</span>
+        <input name="password2" type="password" required autocomplete="new-password"
+               minlength="8" maxlength="128">
+      </label>
+      <button type="submit" class="btn btn-primary btn-block">创建管理员</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
