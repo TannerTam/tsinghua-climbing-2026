@@ -77,7 +77,7 @@
 ### Linux / macOS
 
 ```bash
-git clone https://github.com/<your-user>/tsinghua-climbing-2026.git
+git clone https://github.com/TannerTam/tsinghua-climbing-2026.git
 cd tsinghua-climbing-2026
 chmod +x start.sh
 ./start.sh
@@ -307,8 +307,7 @@ grep -rl 'Tsinghua Climbing 2026' --include='*.html' --include='*.md' --include=
 **把整个仓库 `git clone` 一份到新目录，作为 2027 届的运行时**：
 
 ```bash
-# 假设你已把本项目推到自己的 github:
-git clone https://github.com/<you>/tsinghua-climbing-2026.git tsinghua-climbing-2027
+git clone https://github.com/TannerTam/tsinghua-climbing-2026.git tsinghua-climbing-2027
 cd tsinghua-climbing-2027
 # 按上面 1/2 步修改标题和 logo
 # 首次启动时会自动初始化空数据库, 让你设置新的管理员账号
